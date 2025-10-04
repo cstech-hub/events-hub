@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Events Hub</title>
+<meta name="description" content="Browse campus events, announcements, winners & manage registrations.">
+<link rel="icon" href="assets\images\e.svg" type="image/png">
+<link rel="shortcut icon" href="assets\images\e.svg" type="image/png">
+<link rel="apple-touch-icon" href="assets\images\e.svg">
+<meta name="msapplication-TileImage" content="assets\images\e.svg">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="site-header" data-scroll-header>
+  <div class="container head">
+    <div class="head-top">
+      <a href="index.html" class="brand" aria-label="Events Hub home">
+        <img src="assets/images/logo.png" alt="Events Hub logo">
+        <span>Events Hub</span>
+      </a>
+      <div class="head-actions">
+        <a href="pages/login.html" class="btn-outline btn-small head-admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        <button class="theme-toggle btn-small" type="button" aria-label="Toggle color theme"></button>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="active" aria-current="page" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="pages/events.html"><i class="fa-solid fa-calendar-days"></i> Events</a>
+      <a href="pages/announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <a href="pages/winners.html"><i class="fa-solid fa-trophy"></i> Winners</a>
+      <a href="pages/my-registrations.html"><i class="fa-solid fa-id-card"></i> Registrations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="home-main container">
+  <section class="home-hero">
+    <div class="hero-left">
+      <span class="hero-kicker"><i class="fa-solid fa-bolt"></i>Computer Science Department ( Nilgiri College )</span>
+      <h1 class="hero-title">Events hub</h1>
+      <p class="hero-sub">Your single destination for every happening on campus. Track events, announcements, winners, and registrations with realtime updates.</p>
+      <div class="hero-actions">
+        <a href="pages/events.html" class="btn"><i class="fa-solid fa-calendar-days"></i> Explore Events</a>
+        <a href="pages/announcements.html" class="btn-ghost btn-small"><i class="fa-solid fa-bullhorn"></i> Latest Announcements</a>
+        <a href="pages/my-registrations.html" class="btn-soft btn-small"><i class="fa-solid fa-id-card"></i> My Registrations</a>
+        <a href="pages/login.html" class="btn-outline btn-small"><i class="fa-solid fa-user-shield"></i> Admin Console</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span id="stat-events" class="stat-value">—</span>
+          <span class="stat-label">Events Live</span>
+        </div>
+        <div class="hero-stat">
+          <span id="stat-ann" class="stat-value">—</span>
+          <span class="stat-label">Announcements</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-logo-card">
+        <img src="assets/images/logo.png" alt="Campus events highlight" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="home-panels">
+    <article class="panel-section wide" id="upcomingSection">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-calendar-days"></i> Upcoming Events</h2>
+        <a class="link-chevron" href="pages/events.html">Browse all events <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <p class="panel-description">Discover workshops, fests, competitions, and seminars curated for every department. Use the live filters to zero in on what matters to you.</p>
+      <div class="panel-toolbar">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="eventSearch" placeholder="Search events...">
+        </div>
+        <select id="deptFilter" class="select-pill">
+          <option value="all">All Departments</option>
+        </select>
+      </div>
+      <div class="filter-toolbar">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="today">Today</button>
+        <button class="chip" data-filter="week">This Week</button>
+        <button class="chip" data-filter="free">Free</button>
+      </div>
+      <div class="panel-content">
+        <div id="upcomingRail" class="card-rail card-rail--events"><div class="loader"></div></div>
+      </div>
+    </article>
+
+    <article class="panel-section wide" id="pastSection">
+      <div class="panel-header">
+        <h2><i class="fa-regular fa-clock"></i> Past Events & Highlights</h2>
+        <a class="link-chevron" href="pages/events.html#past">View archive <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <p class="panel-description">Catch up on completed events that are still visible. Dive into recaps, see who won, and revisit sessions you may have missed.</p>
+      <div class="panel-content">
+        <div id="pastRail" class="card-rail card-rail--events"><div class="loader"></div></div>
+      </div>
+    </article>
+
+    <article class="panel-section wide" id="announcementsSection">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-bullhorn"></i> Campus Announcements</h2>
+        <a class="link-chevron" href="pages/announcements.html">Full announcements <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <p class="panel-description">Stay on top of important campus communications, last-minute schedule tweaks, and departmental spotlights.</p>
+      <div class="panel-content">
+        <div id="announcementsRail" class="card-rail card-rail--announcements"><div class="loader"></div></div>
+      </div>
+    </article>
+
+    <article class="panel-section panel-section--accent wide" id="winnersSection">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-trophy"></i> Winner Spotlight</h2>
+        <a class="link-chevron" href="pages/winners.html">Celebrate all winners <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <p class="panel-description">Cheer on the champions and relive memorable moments. The spotlight rotates automatically—click to jump straight to the full winners gallery.</p>
+      <div id="winnerTicker" class="winner-ticker" role="button" tabindex="0" aria-live="polite">
+        <div class="loader"></div>
+      </div>
+      <div class="panel-content">
+        <div id="winnersRail" class="card-rail card-rail--winners"><div class="loader"></div></div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>@ Nilgiri College CS Dept</span><span>•</span>
+    <a href="mailto:niligiricollege.cs@gmail.com">niligiricollege.cs@gmail.com</a>
+  </div>
+</footer>
+
+<!-- Dialogs reused globally -->
+<dialog id="eventDetail" class="dialog">
+  <div class="dialog-card">
+    <button class="close-btn" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+    <div id="detailContent"></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:22px">
+      <button class="btn-outline" data-close-dialog>Close</button>
+  <button class="btn" id="detailRegisterBtn"><i class="fa-solid fa-pen-to-square"></i> Register</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="regDialog" class="dialog">
+  <form id="regForm" class="dialog-card" novalidate>
+    <button class="close-btn" type="button" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+    <h3 style="margin:0 0 12px;font-size:1.15rem;font-weight:800">
+      Register: <span id="regTitle" style="background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent"></span>
+    </h3>
+    <input type="hidden" id="regEventId">
+    <div class="field"><label>Name</label><input id="regName" required></div>
+    <div class="field"><label>Email</label><input id="regEmail" type="email" required></div>
+    <div class="field"><label>Class</label><input id="regClass" required></div>
+    <div class="field"><label>Department</label><input id="regDept" required></div>
+    <div id="regMsg" class="message" hidden></div>
+    <div style="display:flex;justify-content:space-between;gap:14px;margin-top:14px">
+      <button class="btn-outline" type="button" data-close-dialog>Cancel</button>
+      <button class="btn" type="submit" style="display:inline-flex;gap:8px;align-items:center">
+        <span>Submit</span><span id="regSpin" class="spinner" hidden></span>
+      </button>
+    </div>
+  </form>
+</dialog>
+<dialog id="winnerDialog" class="dialog">
+  <div class="dialog-card">
+    <button class="close-btn" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+    <div id="winnerContent"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:24px">
+      <button class="btn-outline" data-close-dialog>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module" src="assets/js/utils/supabase.js"></script>
+<script type="module" src="assets/js/utils/date.js"></script>
+<script type="module" src="assets/js/public-main.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Events • Events hub</title>
+<link rel="icon" href="../assets\images\e.svg">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="site-header" data-scroll-header>
+  <div class="container head">
+    <div class="head-top">
+      <a href="../index.html" class="brand" aria-label="Events hub home">
+  <img src="../assets/images/logo.png" alt="Events hub logo">
+        <span>Events hub</span>
+      </a>
+      <div class="head-actions">
+        <a href="login.html" class="btn-outline btn-small head-admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        <button class="theme-toggle btn-small" type="button" aria-label="Toggle color theme"></button>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="../index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a class="active" aria-current="page" href="events.html"><i class="fa-solid fa-calendar-days"></i> Events</a>
+      <a href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <a href="winners.html"><i class="fa-solid fa-trophy"></i> Winners</a>
+      <a href="my-registrations.html"><i class="fa-solid fa-id-card"></i> Registrations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="padding-top:32px">
+  <div class="section-head" style="gap:14px;align-items:center;flex-wrap:wrap">
+    <h1 style="margin:0;font-size:1.15rem;font-weight:800">All Events</h1>
+    <div class="search-bar" style="flex:1;min-width:240px;max-width:420px">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="eventSearch" placeholder="Search events">
+    </div>
+    <select id="deptFilter" style="background:var(--panel-flat);color:var(--text);border:1px solid var(--panel-border);padding:10px 18px;border-radius:16px;font-size:.6rem;font-weight:600">
+      <option value="all">All Departments</option>
+    </select>
+    <div class="filters" style="flex-wrap:nowrap">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="today">Today</button>
+      <button class="chip" data-filter="week">Week</button>
+      <button class="chip" data-filter="free">Free</button>
+    </div>
+  </div>
+
+  <div id="events-grid" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin-top:14px">
+    <div class="loader"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>@ Nilgiri College CS Dept</span><span>•</span>
+    <a href="mailto:niligiricollege.cs@gmail.com">niligiricollege.cs@gmail.com</a>
+  </div>
+</footer>
+
+<!-- Event Detail Dialog -->
+<dialog id="eventDetail" class="dialog">
+  <div class="dialog-card">
+    <button class="close-btn" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+    <div id="detailContent"></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
+      <button class="btn-outline" data-close-dialog>Close</button>
+      <button class="btn" onclick="document.getElementById('regDialog').showModal()">Register</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Registration Dialog -->
+<dialog id="regDialog" class="dialog">
+  <form id="regForm" class="dialog-card">
+    <button class="close-btn" type="button" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+  <h3 style="margin:0 0 12px;font-size:1.1rem;font-weight:800">Register: <span id="regTitle" style="background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent"></span></h3>
+    <input type="hidden" id="regEventId">
+    <div class="field"><label>Name</label><input id="regName" required></div>
+    <div class="field"><label>Email</label><input id="regEmail" type="email" required></div>
+    <div class="field"><label>Class</label><input id="regClass" required></div>
+    <div class="field"><label>Department</label><input id="regDept" required></div>
+    <div id="regMsg" class="message" hidden></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:12px">
+      <button class="btn-outline" type="button" data-close-dialog>Cancel</button>
+      <button class="btn" type="submit" style="display:flex;gap:8px;align-items:center">
+        <span>Submit</span><span id="regSpin" class="spinner" hidden></span>
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="../assets/js/utils/supabase.js"></script>
+<script type="module" src="../assets/js/utils/date.js"></script>
+<script type="module" src="../assets/js/public-main.js"></script>
+</body>
+</html>
