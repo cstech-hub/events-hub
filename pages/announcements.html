@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Announcements • Events hub</title>
+<link rel="icon" href="../assets\images\e.svg">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="site-header" data-scroll-header>
+  <div class="container head">
+    <div class="head-top">
+      <a href="../index.html" class="brand" aria-label="Events hub home">
+  <img src="../assets/images/logo.png" alt="Events hub logo">
+        <span>Events hub</span>
+      </a>
+      <div class="head-actions">
+        <a href="login.html" class="btn-outline btn-small head-admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        <button class="theme-toggle btn-small" type="button" aria-label="Toggle color theme"></button>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="../index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="events.html"><i class="fa-solid fa-calendar-days"></i> Events</a>
+      <a class="active" aria-current="page" href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <a href="winners.html"><i class="fa-solid fa-trophy"></i> Winners</a>
+      <a href="my-registrations.html"><i class="fa-solid fa-id-card"></i> Registrations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="padding-top:34px">
+  <h1 style="margin:0 0 20px;font-size:1.2rem;font-weight:800">Announcements</h1>
+  <div id="annList" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px">
+    <div class="loader"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>@ Nilgiri College CS Dept</span><span>•</span>
+    <a href="mailto:niligiricollege.cs@gmail.com">niligiricollege.cs@gmail.com</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { fetchAnnouncements } from '../assets/js/utils/supabase.js';
+  import '../assets/js/theme.js';
+  import { esc } from '../assets/js/utils/dom.js';
+  import { fmt } from '../assets/js/utils/date.js';
+
+  const list=document.getElementById('annList');
+
+  (async()=>{
+    try{
+      const anns = await fetchAnnouncements();
+      if(!anns.length){ list.innerHTML='<div class="note">No announcements.</div>'; return; }
+      list.innerHTML = anns.map(a=>`
+        <div class="announcement-card">
+          <h3>${esc(a.title)}</h3>
+          <div class="announcement-meta">
+            <span><i class="fa-regular fa-clock"></i> ${fmt(a.created_at,'MMM D, YYYY h:mm A')}</span>
+          </div>
+            <div class="announcement-body">${esc(a.content||'')}</div>
+        </div>`).join('');
+    }catch(e){
+      list.innerHTML='<div class="note">Failed to load announcements.</div>';
+    }
+  })();
+</script>
+</body>
+</html>
