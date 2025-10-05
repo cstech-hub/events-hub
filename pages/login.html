@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Login • Events hub</title>
+<link rel="icon" href="../assets\images\e.svg">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>.login-box{max-width:480px;margin:60px auto;background:var(--panel);border:1px solid var(--panel-border);padding:34px 34px 40px;border-radius:34px;box-shadow:var(--shadow-sm)}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container head">
+  <a class="brand" href="../index.html"><img src="../assets/images/logo.png" alt=""><span>Events hub</span></a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="login-box">
+    <h1 style="margin:0 0 6px;font-size:1.25rem;font-weight:800">Admin Access</h1>
+    <p style="margin:0 0 20px;font-size:.7rem;color:var(--text-dim)">Authorized accounts only.</p>
+    <form id="loginForm" style="display:grid;gap:16px">
+      <div class="field"><label>Email</label><input id="email" type="email" required placeholder="admin@domain.com"></div>
+      <div class="field"><label>Password</label><input id="password" type="password" required placeholder="••••••••"></div>
+      <div id="err" class="message error" hidden></div>
+      <button class="btn" style="display:flex;gap:10px;align-items:center;justify-content:center">
+        <span id="btnText">Sign In</span><span id="spin" class="spinner" hidden></span>
+      </button>
+    </form>
+    <div style="margin-top:20px"><a class="btn-outline btn-small" href="../index.html">← Back</a></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>@ Nilgiri College CS Dept</span><span>•</span>
+    <a href="mailto:nilgiricollege.cs@gmail.com">contact us</a>
+  </div>
+</footer>
+
+<script>
+  const SUPABASE_URL='https://wyczfqogdbqxphvafjrq.supabase.co';
+  const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5Y3pmcW9nZGJxeHBodmFmanJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MDQ1MTQsImV4cCI6MjA3NDk4MDUxNH0.-_7vFaRdTjIyy5fQXe0hybNTdOIIQwEYdG8wZDdDU-c';
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  (async()=>{const {data:{session}}=await sb.auth.getSession();if(session?.user)location.href='admin/dashboard.html';})();
+  const form=document.getElementById('loginForm');
+  const err=document.getElementById('err');
+  const spin=document.getElementById('spin');
+  const btnText=document.getElementById('btnText');
+
+  form.addEventListener('submit',async e=>{
+    e.preventDefault(); setLoading(true); err.hidden=true;
+    try{
+      const email=document.getElementById('email').value.trim();
+      const password=document.getElementById('password').value;
+      const { error } = await sb.auth.signInWithPassword({ email,password });
+      if(error) throw error;
+      location.href='admin/dashboard.html';
+    }catch(ex){
+      err.textContent=ex.message||'Login failed'; err.hidden=false;
+    }finally{ setLoading(false); }
+  });
+
+  function setLoading(on){
+    spin.hidden=!on;
+    btnText.textContent=on?'Signing in...':'Sign In';
+    form.querySelectorAll('input,button').forEach(i=>i.disabled=on);
+  }
+</script>
+</body>
+</html>

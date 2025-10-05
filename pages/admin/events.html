@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Events (Admin)</title>
+<link rel="icon" href="../../assets\images\e.svg">
+<link rel="stylesheet" href="../../assets/css/admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<button class="toggle-menu" style="display:none">Menu</button>
+<aside class="sidebar" id="sidebar">
+  <div class="side-brand"><img src="../../assets/images/logo.png"><span>Admin Panel</span></div>
+  <nav class="nav-admin">
+    <a href="dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+    <a class="active" href="events.html"><i class="fa-solid fa-calendar-days"></i> Events</a>
+    <a href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+    <a href="winners.html"><i class="fa-solid fa-trophy"></i> Winners</a>
+    <a href="registrations.html"><i class="fa-solid fa-users"></i> Registrations</a>
+    <a href="users.html"><i class="fa-solid fa-user-shield"></i> Admins</a>
+  </nav>
+  <div class="side-footer">
+    <button class="theme-toggle btn-small" type="button"></button>
+    <div id="adminEmail">Loading...</div>
+    <button id="logout" class="btn-outline btn-small"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
+  </div>
+</aside>
+
+<main class="main">
+  <h1 style="margin:0">Events</h1>
+
+  <div class="panel" id="add">
+    <div class="panel-head">Add / Update Event</div>
+    <div class="panel-body">
+      <form id="eventForm" class="grid-2" style="--cols:2">
+        <input type="hidden" id="event_id">
+        <div class="field"><label>Title</label><input id="title" required></div>
+        <div class="field"><label>Location</label><input id="location" required></div>
+        <div class="field"><label>Date & Time</label><input id="event_date" type="datetime-local" required></div>
+        <div class="field"><label>Fee (0 free)</label><input id="fee" type="number" min="0" step="0.01" value="0"></div>
+        <div class="field">
+          <label>Audience Type</label>
+          <select id="audience_type">
+            <option value="college">Whole College</option>
+            <option value="department">Specific Department</option>
+          </select>
+        </div>
+        <div class="field" id="deptField" style="display:none">
+          <label>Department Code</label>
+          <input id="target_department" placeholder="e.g. CSE / ECE / BBA">
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>Description</label><textarea id="description"></textarea>
+        </div>
+        <div class="field"><label>Registration Link</label><input id="reg_link" placeholder="optional"></div>
+        <div class="field"><label>Banner Image</label><input id="image" type="file" accept="image/*"></div>
+        <div class="field"><label>Delete At</label><input id="delete_at" type="datetime-local"></div>
+        <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:12px">
+          <button type="reset" class="btn-outline" id="resetBtn">Reset</button>
+          <button type="submit" class="btn" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+        </div>
+        <div id="msg" class="notice" style="display:none;grid-column:1/-1"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span>All Events</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="admin-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="adminEventSearch" placeholder="Search events">
+        </div>
+        <div class="layout-toggle">
+          <button id="gridMode" class="active" type="button"><i class="fa-solid fa-grip"></i> Grid</button>
+          <button id="listMode" type="button"><i class="fa-solid fa-list"></i> List</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="eventsList" class="events-grid-admin"><div class="loader"></div></div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="../../assets/js/utils/supabase.js"></script>
+<script type="module" src="../../assets/js/auth.js"></script>
+<script type="module" src="../../assets/js/admin/events.js"></script>
+</body>
+</html>

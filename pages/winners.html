@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Winners • Events hub</title>
+<link rel="icon" href="../assets\images\e.svg">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="site-header" data-scroll-header>
+  <div class="container head">
+    <div class="head-top">
+      <a href="../index.html" class="brand" aria-label="Events hub home">
+  <img src="../assets/images/logo.png" alt="Events hub logo">
+        <span>Events hub</span>
+      </a>
+      <div class="head-actions">
+        <a href="login.html" class="btn-outline btn-small head-admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        <button class="theme-toggle btn-small" type="button" aria-label="Toggle color theme"></button>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="../index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="events.html"><i class="fa-solid fa-calendar-days"></i> Events</a>
+      <a href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <a class="active" aria-current="page" href="winners.html"><i class="fa-solid fa-trophy"></i> Winners</a>
+      <a href="my-registrations.html"><i class="fa-solid fa-id-card"></i> Registrations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="padding-top:34px">
+  <div class="section-head" style="gap:14px;flex-wrap:wrap;align-items:center">
+  <h1 style="margin:0;font-size:1.45rem;font-weight:800;background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent">Hall of Excellence</h1>
+    <div class="search-bar" style="flex:1;max-width:420px;min-width:240px">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="winnerSearch" placeholder="Search winner or event name">
+    </div>
+  </div>
+  <div id="winners-mini" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px">
+    <div class="loader"></div>
+  </div>
+  <div class="rail-empty" style="display:none">No winners match the filters right now.</div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>@ Nilgiri College CS Dept</span><span>•</span>
+    <a href="mailto:nilgiricollege.cs@gmail.com">contact us</a>
+  </div>
+</footer>
+
+<dialog id="winnerDialog" class="dialog">
+  <div class="dialog-card">
+    <button class="close-btn" data-close-dialog><i class="fa-solid fa-xmark"></i> Close</button>
+    <div id="winnerContent"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:24px">
+      <button class="btn-outline" data-close-dialog>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module" src="../assets/js/utils/supabase.js"></script>
+<script type="module" src="../assets/js/utils/date.js"></script>
+<script type="module" src="../assets/js/public-main.js"></script>
+<!-- Inline fallback for search & dialog close -->
+<script>
+window.addEventListener('load', ()=>{
+  const search = document.getElementById('winnerSearch');
+  const grid = document.getElementById('winners-mini');
+  // Create no-results message
+  let noMsg;
+  if(grid){
+    noMsg = document.createElement('div');
+    noMsg.className = 'rail-empty';
+    noMsg.textContent = 'No winners match the filters right now.';
+    noMsg.style.display = 'none';
+    grid.parentNode.insertBefore(noMsg, grid.nextSibling);
+  }
+  // Fallback search filtering
+  if(search && grid){
+    search.addEventListener('input', ()=>{
+      const term = search.value.toLowerCase();
+      let visible = 0;
+      document.querySelectorAll('#winners-mini .winner').forEach(card=>{
+        const name = card.querySelector('.name')?.textContent.toLowerCase() || '';
+        const show = name.includes(term);
+        card.style.display = show ? '' : 'none';
+      if(show) visible++;
+      });
+      if(noMsg){ noMsg.style.display = visible ? 'none' : ''; }
+    });
+  }
+  // Fallback close dialog buttons
+  const dlg = document.getElementById('winnerDialog');
+  dlg && dlg.querySelectorAll('[data-close-dialog]').forEach(btn=>{
+    btn.addEventListener('click', ()=>dlg.close());
+  });
+});
+</script>
+</body>
+</html>
